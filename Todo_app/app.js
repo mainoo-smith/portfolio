@@ -3,6 +3,12 @@ const addForm = document.querySelector('.add');
 const list = document.querySelector('.todos')
 const search = document.querySelector('.search input');
 
+// Load Todos from local storage
+document.addEventListener('DOMContentLoaded', () => {
+    const storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
+    storedTodos.forEach(todo => createTemplate(todo));
+}
+
 const createTemplate = todo =>{
     const html = `
         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -19,6 +25,7 @@ addForm.addEventListener('submit', e =>{
 
     if (todo.length){
         createTemplate(todo);
+        addTodoToStorage(todo);
         addForm.reset();
     }
 
@@ -44,11 +51,17 @@ const filterTodos = (term) => {
 };
 
 
-// keyup event
+// Keyup event
 search.addEventListener('keyup', () => {
     const term = search.value.trim().toLowerCase();
     filterTodos(term);
     // console.log(lookup);
 });
 
+// Add to local storage
+const addTodoToStorage = (todo) => {
+    const storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
+    const updatedTodos = storedTodos.filter(item => item !== todo);
+    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+}
 // set timer on items

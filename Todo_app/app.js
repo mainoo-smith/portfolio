@@ -6,14 +6,18 @@ const search = document.querySelector('.search input');
 // Load Todos from local storage
 document.addEventListener('DOMContentLoaded', () => {
     const storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
-    storedTodos.forEach(todo => createTemplate(todo));
+    storedTodos.map(todo => createTemplate(todo.text, todo.completed));
 });
 
-const createTemplate = todo =>{
+const createTemplate = (todo, isCompleted=false) =>{
+    const completedClass = isCompleted ? 'completed' : "";
     const html = `
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            <span>${todo}</span>
-            <i class="far fa-trash-alt delete"></i>
+            <span class="${completedClass}">${todo}</span>
+            <div class="actions">
+                    <i class="far fa-check-circle mark-complete"></i>
+                    <i class="far fa-trash-alt delete"></i>
+                </div>
         </li>`;
 
     list.innerHTML += html;
@@ -64,13 +68,46 @@ search.addEventListener('keyup', () => {
 const addTodoToStorage = (todo) => {
     const storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
     const updatedTodos = storedTodos.filter(item => item !== todo);
+    updatedTodos.push({text: todo, completed: false});
     localStorage.setItem('todos', JSON.stringify(updatedTodos));
 }
 
 // Remove from local storage
 const removeFromStorage = (todo) => {
     const storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
-    const updatedTodos = storedTodos.filter(item => item !== todo);
+    const updatedTodos = storedTodos.filter(item => item.text !== todo);
     localStorage.setItem('todos', JSON.stringify(updatedTodos));
+}
+
+// Mark item as completed
+
+list.addEventListener('click', e => {
+    if(e.target.classList.contains('mark-complete')){
+        debugger
+        const todoItem = e.target.closest('li');
+        const span = todoItem.querySelector('span');
+        const itemText = span.textContent.trim();
+
+        span.classList.toggle('completed');
+        toggleCompletedInStorage(itemText, span.classList.contains('completed'));
+    }
+})
+
+/**
+ * Toggle state of todo item in local storage
+ * @param todo
+ * @param boolean: completed or not completed
+ */
+
+const toggleCompletedInStorage = (todo, isCompleted) => {
+    const storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
+    const updatedTodos = storedTodos.map(item => {
+        if(item.text === todo){
+            return {...item, completed: isCompleted}
+        }
+        return item
+    });
+    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+
 }
 // set timer on items

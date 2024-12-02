@@ -34,7 +34,9 @@ addForm.addEventListener('submit', e =>{
 // delete todos
 list.addEventListener('click', e => {
     if(e.target.classList.contains('delete')){
+        const itemToDelete = e.target.parentElement.textContent.trim();
         e.target.parentElement.remove();
+        removeFromStorage(itemToDelete);
     }
 });
 
@@ -60,6 +62,13 @@ search.addEventListener('keyup', () => {
 
 // Add to local storage
 const addTodoToStorage = (todo) => {
+    const storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
+    const updatedTodos = storedTodos.filter(item => item !== todo);
+    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+}
+
+// Remove from local storage
+const removeFromStorage = (todo) => {
     const storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
     const updatedTodos = storedTodos.filter(item => item !== todo);
     localStorage.setItem('todos', JSON.stringify(updatedTodos));

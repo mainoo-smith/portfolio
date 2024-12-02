@@ -7,7 +7,7 @@ const search = document.querySelector('.search input');
 document.addEventListener('DOMContentLoaded', () => {
     const storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
     storedTodos.forEach(todo => createTemplate(todo));
-}
+});
 
 const createTemplate = todo =>{
     const html = `

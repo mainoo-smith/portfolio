@@ -37,7 +37,6 @@ addForm.addEventListener('submit', e =>{
 
 // delete todos
 list.addEventListener('click', e => {
-    debugger
     if(e.target.classList.contains('delete')){
         const itemToDelete = e.target.closest('li');
         const itemText = itemToDelete.querySelector('span').textContent.trim();
@@ -85,7 +84,6 @@ const removeFromStorage = (todo) => {
 
 list.addEventListener('click', e => {
     if(e.target.classList.contains('mark-complete')){
-        debugger
         const todoItem = e.target.closest('li');
         const span = todoItem.querySelector('span');
         const itemText = span.textContent.trim();
